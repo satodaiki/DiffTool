@@ -1,5 +1,6 @@
 package com.company;
 
+import com.sun.tools.javac.parser.JavacParser;
 import com.sun.tools.javac.util.StringUtils;
 
 import javax.swing.text.StringContent;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class JavaCodeSplitter {
@@ -44,13 +46,24 @@ public class JavaCodeSplitter {
 
         Map<String, String> methodList = new HashMap<String, String>();
 
-        String regex_method = "*\(*\)*\{*(\{*\})*\}";
+        // メソッドの解析
+        for (char c : code.toCharArray()) {
+            if (c == '{') {
+
+            }
+        }
+
+
+
+        String regex_method = ".+\\(*\\)*\\{*(\\{*\\})*\\}.+";
 
         Pattern method = Pattern.compile(regex_method);
 
+        Matcher methodMatch = method.matcher(code);
 
+        if (methodMatch.find()) {
 
-
+        }
         return methodList;
     }
 
