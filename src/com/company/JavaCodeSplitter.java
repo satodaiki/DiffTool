@@ -53,8 +53,6 @@ public class JavaCodeSplitter {
             }
         }
 
-
-
         String regex_method = ".+\\(*\\)*\\{*(\\{*\\})*\\}.+";
 
         Pattern method = Pattern.compile(regex_method);
