@@ -1,27 +1,24 @@
 package com.company;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.Map;
+import java.util.List;
 
 public class Main {
 
-    public static void main(String[] args){
+    private static final String INI_FILE_PATH = "./setting.ini";
 
-        // JavaMethodSplitter s = new JavaMethodSplitter();
-        JavaCodeSplitter jcs = new JavaCodeSplitter();
+    public static void main(String[] args) throws IOException {
 
-        // コード文字列の生成
-        String code = jcs.getCodeStr("/Users/satodai/Downloads/acf3bd19cc8b7c959118-43c7dd0b77df94ca241714dd9524a72147c9dc12/ShowClassStructure.java");
+        IniFileLoader ifl = new IniFileLoader(INI_FILE_PATH);
 
-        System.out.println("code string:\n" + code);
+        // 比較元ファイルを取得
+        List<String> origCode = JavaCodeSplitter.getJavaCode(ifl.getOrigFile());
+        // 比較先ファイルを取得
+        List<String> destCode = JavaCodeSplitter.getJavaCode(ifl.getDestFile());
 
-        // コードの分割
-        Map<JavaCodeSplitter.Type, Map<String, String>> codeMap = jcs.splitCode(code);
+        // コード差異をカウント
+        int diffCnt = JavaCodeDifference.countCodeDiff(origCode, destCode);
 
-
-
+        System.out.println("Difference Code Line Count:" + diffCnt);
     }
 }

@@ -1,94 +1,40 @@
 package com.company;
 
-import com.sun.tools.javac.parser.JavacParser;
-import com.sun.tools.javac.util.StringUtils;
-
-import javax.swing.text.StringContent;
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Javaファイルのコード分解クラス
+ *
+ * Javaのファイルをフィールド、メソッドごとに分割する
+ *
+ * TODO: Java以外の言語にも対応できるようinterfaceを定義（する必要ないかも）
+ */
 public class JavaCodeSplitter {
 
-    public static final String EMPTY_STR = "";
-
-    // codeSplitがリターンするマップオブジェクトのキー
-    public static enum Type {
-        Method,
-        Field
-    };
-
-
     /**
+     * Javaファイルのコード
      *
-     * 入力ファイルのコード文字列を分解<pre>
-     * 各フィールド、各メソッドがマップオブジェクトに格納される
-     *
-     * @param code
-     * @return マップオブジェクト
+     * @param javaFilePath      .javaファイルの絶対パス
+     * @return
+     * @throws IOException
      */
-    public Map<Type, Map<String, String>> splitCode(String code) {
-        Map<Type, Map<String, String>> methodList = new HashMap<Type, Map<String, String>>();
+    public static List<String> getJavaCode(String javaFilePath) throws IOException {
 
+        Pattern extentionP = Pattern.compile("\\.[^\\.]+$");
+        Matcher extentionM = extentionP.matcher(javaFilePath);
 
-
-        return methodList;
-    }
-
-
-    public Map<String, String> splitMethod(String code) {
-
-        Map<String, String> methodList = new HashMap<String, String>();
-
-        // メソッドの解析
-        for (char c : code.toCharArray()) {
-            if (c == '{') {
-
+        if (extentionM.find()) {
+            if (!".java".equals(extentionM.group())) {
+                throw new IOException("The extension corresponds only to \".java\".");
             }
         }
 
-        String regex_method = ".+\\(*\\)*\\{*(\\{*\\})*\\}.+";
-
-        Pattern method = Pattern.compile(regex_method);
-
-        Matcher methodMatch = method.matcher(code);
-
-        if (methodMatch.find()) {
-
-        }
-        return methodList;
-    }
-
-    /**
-     *
-     * コード文字列取得
-     *
-     * @param filePath  コード取得先ファイルパス
-     * @return コード文字列
-     */
-    public String getCodeStr(String filePath) {
-
-        String codeStr = EMPTY_STR;
-
-        try(BufferedReader in = new BufferedReader(new FileReader(filePath))){
-
-            // 空文字で初期化
-            String codeLine = EMPTY_STR;
-
-            //最後の一行まで読み込む
-            while((codeLine = in.readLine()) != null){
-                codeStr = codeStr + codeLine + "\n";
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return codeStr;
+        return Files.readAllLines(Paths.get(javaFilePath), StandardCharsets.UTF_8);
     }
 }
